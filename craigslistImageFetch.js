@@ -49,7 +49,7 @@ if(jQuery) {
             e.stopPropagation();
             e.preventDefault();
           });
-          $(a).siblings().last().after(toggleLink).after($('<span>&nbsp;&nbsp;&nbsp;</span>'));
+          $(a).siblings().last().after(toggleLink);
 	};
 	
 	var addLinks = function() {
