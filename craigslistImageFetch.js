@@ -49,7 +49,7 @@ if(jQuery) {
             e.stopPropagation();
             e.preventDefault();
           });
-          $(a).siblings().last().after(toggleLink);
+          $(a).siblings("*:not('br')").last().after(toggleLink);
 	};
 	
 	var addLinks = function() {
