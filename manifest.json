@@ -1,6 +1,6 @@
 {
   "name": "Craigslist image expander",
-  "version" : "0.2",
+  "version" : "0.2.1",
   "permissions": [
     "http://*.craigslist.org/search/apa/*"
   ],
@@ -8,7 +8,7 @@
     {
       "js" : ["jquery.js", "craigslistImageFetch.js"],
       "css" : ["craigslistImageFetch.css"],
-      "matches" : ["http://*.craigslist.org/search/*"]
+      "matches" : ["http://*.craigslist.org/*"]
     }
   ]
 }
