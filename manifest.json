@@ -1,6 +1,9 @@
 {
-  "name": "Craigslist image expander",
-  "version" : "0.2.2",
+  "name": "Craigslist Inspector",
+  "version" : "0.2.3",
+  "icons": {
+    "128": "icon_128.png"
+  },
   "permissions": [
     "http://*.craigslist.org/search/apa/*"
   ],

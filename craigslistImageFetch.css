@@ -1,2 +1,7 @@
-.toggle { font-size: small; color: cadetblue; margin-left: 3px; }
+.helpfulText { font-size: small; margin-left: 3px; }
+.toggle { color: cadetblue; }
+.possible { color: darkgreen; }
+.found { color: darkgoldenrod; }
+.nope { color: tomato; }
+
 .container { max-height: 300px; overflow: auto; }
