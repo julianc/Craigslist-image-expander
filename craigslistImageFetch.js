@@ -107,7 +107,7 @@ if(jQuery) {
       e.stopPropagation();
       e.preventDefault();
     });
-    $(a).siblings("br").last().before(checkLink);
+    $(a).siblings('*:not("br")').last().after(checkLink);
   };
 
   var addLinks = function() {
