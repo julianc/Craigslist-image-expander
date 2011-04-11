@@ -1,4 +1,9 @@
 if(jQuery) {
+  var HAS_NOTHING = '0';
+  var HAS_LINK = '1';
+  var HAS_ADDRESS = '2';
+  var HAS_LINK_AND_ADDRESS = '3';
+
   var fetchImages = function(a, callback) {
     var _callback = function(html) {
       callback($(html).find('img'));
@@ -23,6 +28,9 @@ if(jQuery) {
   };
 
   var toggleImages = function(a) {
+    // Making the toggle link "visited" - should technically be done after we show the images,
+    // but I think it's a better user experience and is more consistent with normal <a> tags
+    $(a).siblings('.toggle')[0].className += ' seen';
     var container = getImagesContainer(a);
     if(container) {
       // we already have the images, just toggle
@@ -49,6 +57,7 @@ if(jQuery) {
         container.append(images);
         $(a).siblings('.toggle').last().after(container);
         container.slideDown(600);
+        localStorage[a.href] = 1;
       };
       fetchImages(a, callback);
     }
@@ -65,19 +74,28 @@ if(jQuery) {
         var addressAnchors = anchors.filter(function(i) { return $(this).parent('small').length > 0; });
         addressAnchorsLen = addressAnchors.length;
         var text = "has address!";
-        var titleLink = anchors.first();
+        var titleLink = anchors[0];
         if(anchorsLen > addressAnchorsLen) {
-          text = addressAnchorsLen > 0 ? "has links and address!" : "has links!";
+          if(addressAnchorsLen > 0) {
+            text = "has links and address!";
+            localStorage[url] = HAS_LINK_AND_ADDRESS;
+          } else {
+            text =  "has links!";
+            localStorage[url] = HAS_LINK;
+          }
           for(var i = 0, len = anchors.length; i < len; i++) {
             if(!$.inArray(anchors[i], addressAnchors)) {
               titleLink = anchors[i];
               break;
             }
           }
+        } else {
+          localStorage[url] = HAS_ADDRESS;
         }
-        $(a).siblings('.possible').first().replaceWith('<a href="'+url+'" class="helpfulText found" title="'+anchors.first().attr('href')+'">'+text+'</a>');
+        $(a).siblings('.possible').first().replaceWith('<a href="'+url+'" class="helpfulText found" title="'+titleLink.href+'">'+text+'</a>');
       } else {
         $(a).siblings('.possible').first().replaceWith('<span class="helpfulText nope">no links</span>');
+        localStorage[a.href] = HAS_NOTHING;
       }
     };
 
@@ -90,7 +108,11 @@ if(jQuery) {
 
   var addFetchImagesLink = function(a) {
     var url = a.href;
-    var toggleLink = $('<a class="helpfulText toggle" href="'+url+'">show images</a>');
+    var cssClasses = 'helpfulText toggle';
+    if(localStorage[a.href]) {
+      cssClasses += ' seen';
+    }
+    var toggleLink = $('<a class="'+cssClasses+'" href="'+url+'">show images</a>');
     toggleLink.click(function(e) {
       toggleImages(a);
       e.stopPropagation();
@@ -101,7 +123,19 @@ if(jQuery) {
 
   var addCheckForLinksLink = function(a) {
     var url = a.href;
-    var checkLink = $('<a class="helpfulText possible" href="'+url+'">check for links</a>');
+    var storedInfo = localStorage[url];
+    var checkLink = $('<a class="helpfulText" href="'+url+'">check for links</a>');
+    if(storedInfo === HAS_NOTHING) {
+      checkLink.addClass('nope').text('no links');
+    } else if(storedInfo === HAS_LINK) {
+      checkLink.addClass('found').text('has links!');
+    } else if(storedInfo === HAS_ADDRESS) {
+      checkLink.addClass('found').text('has address!');
+    } else if(storedInfo === HAS_LINK_AND_ADDRESS) {
+      checkLink.addClass('found').text('has links and address!');
+    } else {
+      checkLink.addClass('possible');
+    }
     checkLink.click(function(e) {
       checkForLink(a);
       e.stopPropagation();

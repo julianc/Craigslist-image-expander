@@ -1,5 +1,6 @@
 .helpfulText { font-size: small; margin-left: 3px; }
 .toggle { color: cadetblue; }
+.seen { color: indigo; }
 .possible { color: darkgreen; }
 .found { color: darkgoldenrod; }
 .nope { color: tomato; }
